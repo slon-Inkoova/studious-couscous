@@ -1,42 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
   <title>Ubicación del Usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 2em; }
+    button { padding: 1em; font-size: 1em; }
+    p { margin-top: 1em; font-weight: bold; }
+  </style>
 </head>
 <body>
-  <h1>Obtener Ubicación</h1>
+  <h1>Solicitar ubicación</h1>
   <button onclick="getLocation()">Pedir ubicación</button>
-  <p id="output"></p>
+  <p id="output">Pulsa el botón para obtener tu ubicación.</p>
 
   <script>
     function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
-        document.getElementById("output").innerText = "La geolocalización no es compatible.";
+      if (!navigator.geolocation) {
+        document.getElementById("output").innerText = "Tu navegador no soporta la geolocalización.";
+        return;
       }
-    }
 
-    function showPosition(position) {
-      document.getElementById("output").innerText =
-        `Latitud: ${position.coords.latitude}, Longitud: ${position.coords.longitude}`;
-    }
-
-    function showError(error) {
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          document.getElementById("output").innerText = "Permiso denegado.";
-          break;
-        case error.POSITION_UNAVAILABLE:
-          document.getElementById("output").innerText = "Ubicación no disponible.";
-          break;
-        case error.TIMEOUT:
-          document.getElementById("output").innerText = "Tiempo de espera agotado.";
-          break;
-        default:
-          document.getElementById("output").innerText = "Error desconocido.";
-          break;
-      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude.toFixed(5);
+          const lon = position.coords.longitude.toFixed(5);
+          document.getElementById("output").innerText = `Latitud: ${lat}, Longitud: ${lon}`;
+        },
+        (error) => {
+          const output = document.getElementById("output");
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              output.innerText = "Permiso denegado.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              output.innerText = "Ubicación no disponible.";
+              break;
+            case error.TIMEOUT:
+              output.innerText = "Tiempo de espera agotado.";
+              break;
+            default:
+              output.innerText = "Error desconocido.";
+          }
+        }
+      );
     }
   </script>
 </body>
