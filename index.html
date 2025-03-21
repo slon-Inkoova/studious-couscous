@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ubicación del Usuario</title>
+</head>
+<body>
+  <h1>Obtener Ubicación</h1>
+  <button onclick="getLocation()">Pedir ubicación</button>
+  <p id="output"></p>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        document.getElementById("output").innerText = "La geolocalización no es compatible.";
+      }
+    }
+
+    function showPosition(position) {
+      document.getElementById("output").innerText =
+        `Latitud: ${position.coords.latitude}, Longitud: ${position.coords.longitude}`;
+    }
+
+    function showError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          document.getElementById("output").innerText = "Permiso denegado.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          document.getElementById("output").innerText = "Ubicación no disponible.";
+          break;
+        case error.TIMEOUT:
+          document.getElementById("output").innerText = "Tiempo de espera agotado.";
+          break;
+        default:
+          document.getElementById("output").innerText = "Error desconocido.";
+          break;
+      }
+    }
+  </script>
+</body>
+</html>
